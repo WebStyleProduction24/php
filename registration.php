@@ -17,6 +17,7 @@ if (isset($_POST['register'])) {
     if ($query->rowCount() > 0) {
         //Если E-mail зарегистрирован
         echo '<p class="error">Этот адрес уже зарегистрирован!</p>';
+        echo '<script>setTimeout(function(){window.location.href = "register.php";}, 3 * 1000);</script>';
     }
 
     if ($query->rowCount() == 0) {
@@ -29,12 +30,16 @@ if (isset($_POST['register'])) {
 
         if ($result) {
             echo '<p class="success">Регистрация прошла успешно!</p>';
+            echo '<script>setTimeout(function(){window.location.href = "/";}, 3 * 1000);</script>';
         } else {
             echo '<p class="error">Неверные данные!</p>';
+            echo '<script>setTimeout(function(){window.location.href = "register.php";}, 3 * 1000);</script>';
         }
 
     }
 
 }
+
+
 
 ?>
