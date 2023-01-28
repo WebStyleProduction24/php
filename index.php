@@ -5,5 +5,6 @@
         exit;
     } else {
        	echo 'Вы авторизованы!';
+       	echo '<a href= "logout.php?do=exit"> Logout </a>';
     }
 ?>
