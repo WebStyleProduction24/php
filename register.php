@@ -1,79 +1,82 @@
-<?php
-
-session_start();
-
-include('config.php');
-
-if (isset($_POST['register'])) {
-	$username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $password_hash = password_hash($password, PASSWORD_BCRYPT);
-
-    $query = $connection->prepare("SELECT * FROM users WHERE email=:email OR username=:username"); //Подготавливаем запрос к выполнению
-    $query->bindParam("email", $email, PDO::PARAM_STR); //Привязываем параметр запроса к переменной
-    $query->bindParam("username", $username, PDO::PARAM_STR); //Привязываем параметр запроса к переменной
-    $query->execute(); //Запускаем подготовленный к выполнению запрос
-
-    if ($query->rowCount() > 0) {
-        //Если E-mail или пользователь не зарегистрированы
-        echo '<p class="error">E-mail или login уже зарегистрирован!</p>';
-    }
-
-
-    if ($query->rowCount() == 0) {
-        //Если E-mail или пользователь не не зарегистрированы
-        $query = $connection->prepare("INSERT INTO users(username,password,email) VALUES (:username,:password_hash,:email)");
-        $query->bindParam("username", $username, PDO::PARAM_STR);
-        $query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
-        $query->bindParam("email", $email, PDO::PARAM_STR);
-        $result = $query->execute();
-
-        if ($result) {
-            echo '<p class="success">Регистрация прошла успешно!</p>';
-            echo '<script>setTimeout(function(){window.location.href = "/";}, 3 * 1000);</script>';
-        } else {
-            echo '<p class="error">Неверные данные!</p>';
-        }
-
-    }
-
-}
-
-
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Регистрация</title>	
-	<link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-	<script>
-        $(function(){
-            $(".error").delay(3000).slideUp(300);
-        });
-    </script>
-</head>
-<body>
-	<form method="post" action="" name="signup-form">
-		<div class="form-element">
-			<label>Username</label>
-			<input type="text" name="username" pattern="[a-zA-Z0-9]+" required />
-		</div>
-		<div class="form-element">
-			<label>Email</label>
-			<input type="email" name="email" required />
-		</div>
-		<div class="form-element">
-			<label>Password</label>
-			<input type="password" name="password" required />
-		</div>
-		<button type="submit" name="register" value="register">Register</button>
-	</form>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Регистрация</title>
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">		
+		<link rel="stylesheet" href="style.css">
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		<script>
+			$(function(){
+				$(".alert").delay(3000).slideUp(300);
+			});
+		</script>
+	</head>
+
+	<body>
+		<form class="p-5 mb-5 text-bg-light border rounded" method="post" action="" name="signin-form">
+	        <div class="mb-3">
+				<label for="exampleInputLogin" class="form-label">Логин</label>
+				<input type="text" class="form-control" id="exampleInputLogin" name="username" pattern="[a-zA-Z0-9]+" required>
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputEmail" class="form-label">Email</label>
+				<input type="email" class="form-control" id="exampleInputEmail" name="email" required />
+			</div>
+
+			<div class="mb-3">
+				<label for="exampleInputPassword" class="form-label">Пароль</label>
+				<input type="password" class="form-control" id="exampleInputPassword" name="password" required>
+			</div>
+			<button onclick="window.location.href = 'register.php';" type="submit" class="btn btn-primary" name="register" value="register">Зарегистрироваться</button>
+		</form>
+
+
+		<?php
+			session_start();
+
+			include('config.php');
+
+			if (isset($_POST['register'])) {
+				$username = $_POST['username'];
+				$email = $_POST['email'];
+				$password = $_POST['password'];
+				$password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+				$query = $connection->prepare("SELECT * FROM users WHERE email=:email OR username=:username"); //Подготавливаем запрос к выполнению
+				$query->bindParam("email", $email, PDO::PARAM_STR); //Привязываем параметр запроса к переменной
+				$query->bindParam("username", $username, PDO::PARAM_STR); //Привязываем параметр запроса к переменной
+				$query->execute(); //Запускаем подготовленный к выполнению запрос
+
+				if ($query->rowCount() > 0) {
+					//Если E-mail или пользователь не зарегистрированы
+					echo '<div class="alert alert-danger" role="alert">E-mail или имя пользователя уже зарегистрированы!</div>';
+				}
+
+
+				if ($query->rowCount() == 0) {
+					//Если E-mail или пользователь не не зарегистрированы
+					$query = $connection->prepare("INSERT INTO users(username,password,email) VALUES (:username,:password_hash,:email)");
+					$query->bindParam("username", $username, PDO::PARAM_STR);
+					$query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);
+					$query->bindParam("email", $email, PDO::PARAM_STR);
+					$result = $query->execute();
+
+					if ($result) {
+						echo '<div class="alert alert-success" role="alert">Регистрация прошла успешно!</div>';
+						echo '<script>setTimeout(function(){window.location.href = "/";}, 3 * 1000);</script>';
+					} else {
+						echo '<div class="alert alert-danger" role="alert">Неверные данные!</div>';
+					}
+				}
+			}
+		?>
+
+	</body>
 </html>
+
+
