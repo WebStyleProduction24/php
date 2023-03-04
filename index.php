@@ -1,10 +1,11 @@
 <?php
-    if(session_id() == '') {
-        session_start();
-    }
+	session_start();
 	include 'header.php';
 
-	session_start();
+	if(session_id() == '') {
+		session_start();
+	}
+	
 	if(!isset($_SESSION['user_id'])){
 		$title = 'Авторизация';
 		$_SESSION['s'] = $title;
