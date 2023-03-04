@@ -20,8 +20,10 @@
 
 
 		<?php
-			session_start();
-
+		    if(session_id() == '') {
+		        session_start();
+		    }
+		    
 			include('config.php');
 
 			if (isset($_POST['register'])) {

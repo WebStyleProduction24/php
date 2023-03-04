@@ -1,5 +1,7 @@
 <?php
-	session_start();
+    if(session_id() == '') {
+        session_start();
+    }
 	unset($_COOKIE[session_name()]);
 	unset($_COOKIE[session_id()]);
 	session_unset();
