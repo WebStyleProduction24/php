@@ -1,4 +1,14 @@
-<?php include 'header.php';?>
+<?php
+
+if(session_id() == '') {
+    session_start();
+}
+
+$title = 'Авторизация';
+$_SESSION['s'] = $title;
+include 'header.php';
+
+?>
 
 <body>	
     <form class="p-5 mb-5 text-bg-light border rounded" method="post" action="" name="signin-form">
@@ -16,9 +26,7 @@
 
 
 <?php
-    if(session_id() == '') {
-        session_start();
-    }
+
     include('config.php');
     if (isset($_POST['login'])) {
         $username = $_POST['username'];
@@ -41,6 +49,9 @@
             }
         }
     }
+
+    $title = 'Авторизация';
+    $_SESSION['s'] = $title;
 ?>
 
 
