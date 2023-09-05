@@ -45,13 +45,13 @@ if (isset($_POST['register'])) {
 	$query->execute(); //Запускаем подготовленный к выполнению запрос
 
 	if ($query->rowCount() > 0) {
-		//Если E-mail или пользователь не зарегистрированы
+		//Если E-mail или пользователь зарегистрированы
 		echo '<div class="alert alert-danger" role="alert">E-mail или имя пользователя уже зарегистрированы!</div>';
 	}
 
 
 	if ($query->rowCount() == 0) {
-		//Если E-mail или пользователь не не зарегистрированы
+		//Если E-mail или пользователь не зарегистрированы
 		$query = $connection->prepare("INSERT INTO users(username,password,email) VALUES (:username,:password_hash,:email)");
 		$query->bindParam("username", $username, PDO::PARAM_STR);
 		$query->bindParam("password_hash", $password_hash, PDO::PARAM_STR);

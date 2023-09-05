@@ -42,6 +42,7 @@ if (isset($_POST['login'])) {
     } else {
         if (password_verify($password, $result['password'])) {
             $_SESSION['user_id'] = $result['id'];
+            $_SESSION['username'] = $result['username'];
             echo '<div class="alert alert-success" role="alert">Поздравляем, вы прошли авторизацию!</div>';
             echo '<script>setTimeout(function(){window.location.href = "/";}, 3 * 1000);</script>';
         } else {
